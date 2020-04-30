@@ -4,12 +4,11 @@ import { getInsertionSortAnimations } from '../sortingAlgorithms/sortingAlgorith
 import { getbubbleSortAnimations } from '../sortingAlgorithms/sortingAlgorithms.js';
 import { getCountingSortAnimations } from '../sortingAlgorithms/sortingAlgorithms.js';
 import './SortingVisualizer.css';
+import { Navbar, Nav, Button } from 'react-bootstrap';
 
-// Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 1;
+const WIDTH = window.innerWidth;
 
-// Change this value for the number of bars (value) in the array.
-const NUMBER_OF_ARRAY_BARS = 333;
+const HEIGHT = window.innerHeight;
 
 // This is the main color of the array bars.
 const PRIMARY_COLOR = 'turquoise';
@@ -34,15 +33,16 @@ export default class SortingVisualizer extends React.Component {
 
   resetArray() {
     const array = [];
-    for (let i = 0; i < NUMBER_OF_ARRAY_BARS; i++) {
-      array.push(randomIntFromInterval(10, 650));
+    const n = Math.round((WIDTH - 199) / 4);
+    for (let i = 0; i < n; i++) {
+      array.push(randomIntFromInterval(10, HEIGHT - 72));
     }
-    //resetColor();
     this.setState({ array });
   }
 
   mergeSort() {
-    let animationSpeed = ANIMATION_SPEED_MS;
+    const n = Math.round((WIDTH - 199) / 4);
+    let animationSpeed = 334 / n;
     document.getElementById('gb').setAttribute("disabled", "disabled");
     document.getElementById('mb').setAttribute("disabled", "disabled");
     document.getElementById('qb').setAttribute("disabled", "disabled");
@@ -79,7 +79,8 @@ export default class SortingVisualizer extends React.Component {
   }
 
   countingSort() {
-    const animationSpeed = ANIMATION_SPEED_MS * 10;
+    const n = Math.round((WIDTH - 199) / 4);
+    const animationSpeed = 334 / n;
     document.getElementById('gb').setAttribute("disabled", "disabled");
     document.getElementById('mb').setAttribute("disabled", "disabled");
     document.getElementById('qb').setAttribute("disabled", "disabled");
@@ -102,7 +103,6 @@ export default class SortingVisualizer extends React.Component {
           const [barOneIdx, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOneIdx].style;
           barOneStyle.height = `${newHeight}px`;
-          //barOneStyle.backgroundColor = "lightblue";
         }, i * animationSpeed);
       }
       setTimeout(() => {
@@ -116,7 +116,8 @@ export default class SortingVisualizer extends React.Component {
   }
 
   insertionSort() {
-    const animationSpeed = ANIMATION_SPEED_MS * 0.1;
+    const n = Math.round((WIDTH - 199) / 4);
+    const animationSpeed = 33.4 / n;
     document.getElementById('gb').setAttribute("disabled", "disabled");
     document.getElementById('mb').setAttribute("disabled", "disabled");
     document.getElementById('qb').setAttribute("disabled", "disabled");
@@ -153,7 +154,8 @@ export default class SortingVisualizer extends React.Component {
   }
 
   BubbleSort() {
-    const animationSpeed = ANIMATION_SPEED_MS * 0.1;
+    const n = Math.round((WIDTH - 199) / 4);
+    const animationSpeed = 33.4 / n;
     document.getElementById('gb').setAttribute("disabled", "disabled");
     document.getElementById('mb').setAttribute("disabled", "disabled");
     document.getElementById('qb').setAttribute("disabled", "disabled");
@@ -211,31 +213,19 @@ export default class SortingVisualizer extends React.Component {
     const { array } = this.state;
     return (
       <div>
-        <nav className="navbar navbar-expand-lg" style={{ backgroundColor: '#242424' }}>
-          <a className="navbar-brand" style={{ backgroundColor: '#242424', color: 'white' }} href="#">Sorting-Visualizer</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item active">
-                <button id="gb" className="btn btn-dark" type="button" style={{ backgroundColor: '#242424' }} onClick={() => this.resetArray()}>Generate New Array</button>
-              </li>
-              <li className="nav-item">
-                <button id="mb" className="btn btn-dark" style={{ backgroundColor: '#242424' }} onClick={() => this.mergeSort()}>Merge Sort</button>
-              </li>
-              <li className="nav-item">
-                <button id="hb" className="btn btn-dark" style={{ backgroundColor: '#242424' }} onClick={() => this.countingSort()}>Counting Sort</button>
-              </li>
-              <li className="nav-item">
-                <button id="qb" className="btn btn-dark" style={{ backgroundColor: '#242424' }} onClick={() => this.insertionSort()}>Insertion Sort</button>
-              </li>
-              <li className="nav-item">
-                <button id="bb" className="btn btn-dark" style={{ backgroundColor: '#242424' }} onClick={() => this.BubbleSort()}>Bubble Sort</button>
-              </li>
-            </ul>
-          </div>
-        </nav>
+        <Navbar collapseOnSelect expand="lg" bg="#242424" variant="dark">
+          <Navbar.Brand href="#home">Sorting-Visualizer</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="ml-auto">
+              <Button id="gb" onClick={() => this.resetArray()} style={{ backgroundColor: '#242424' }} variant="dark">Generate New Array</Button>
+              <Button id="mb" onClick={() => this.mergeSort()} style={{ backgroundColor: '#242424' }} variant="dark">Merge Sort</Button>
+              <Button id="hb" onClick={() => this.countingSort()} style={{ backgroundColor: '#242424' }} variant="dark">Counting Sort</Button>
+              <Button id="qb" onClick={() => this.insertionSort()} style={{ backgroundColor: '#242424' }} variant="dark">Insertion Sort</Button>
+              <Button id="bb" onClick={() => this.BubbleSort()} style={{ backgroundColor: '#242424' }} variant="dark">Bubble Sort</Button>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
 
         <div className="array-container">
           {array.map((value, idx) => (
@@ -263,13 +253,6 @@ function randomIntFromInterval(min, max) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-// function resetColor() {
-//   const arrayBars = document.getElementsByClassName('array-bar');
-//   for (let i = 0; i < arrayBars.length; i++) {
-//     arrayBars[i].style.backgroundColor = "turquoise";
-//   }
-// }
 
 // function arraysAreEqual(arrayOne, arrayTwo) {
 //   if (arrayOne.length !== arrayTwo.length) return false;
